@@ -45,7 +45,81 @@ export class Tokenizer {
         return createToken(TokenType.Eof, "eof");
 
       case "=":
+        if (this.peek() === "=") {
+          this.readChar();
+          return createToken(TokenType.Equal, "==");
+        }
         return createToken(TokenType.Assign, this.ch);
+
+      case ";":
+        return createToken(TokenType.Semicolon, this.ch);
+
+      case "(":
+        return createToken(TokenType.OpenParenthesis, this.ch);
+
+      case ")":
+        return createToken(TokenType.CloseParenthesis, this.ch);
+
+      case "{":
+        return createToken(TokenType.OpenBrace, this.ch);
+
+      case "}":
+        return createToken(TokenType.CloseBrace, this.ch);
+
+      case "[":
+        return createToken(TokenType.OpenBracket, this.ch);
+
+      case "]":
+        return createToken(TokenType.CloseBracket, this.ch);
+
+      case ",":
+        return createToken(TokenType.Comma, this.ch);
+
+      case "+":
+        return createToken(TokenType.Plus, this.ch);
+
+      case "-":
+        return createToken(TokenType.Dash, this.ch);
+
+      case "*":
+        return createToken(TokenType.Asterisk, this.ch);
+
+      case "/":
+        return createToken(TokenType.Slash, this.ch);
+
+      case "<":
+        if (this.peek() === "=") {
+          this.readChar();
+          return createToken(TokenType.LessThanEqual, "<=");
+        }
+        return createToken(TokenType.LessThan, this.ch);
+
+      case ">":
+        if (this.peek() === "=") {
+          this.readChar();
+          return createToken(TokenType.GreaterThanEqual, ">=");
+        }
+        return createToken(TokenType.GreaterThan, this.ch);
+
+      case "!":
+        return createToken(TokenType.Bang, this.ch);
+
+      case ":":
+        return createToken(TokenType.Colon, this.ch);
+
+      case "&":
+        if (this.peek() === "&") {
+          this.readChar();
+          return createToken(TokenType.And, "&&");
+        }
+        break;
+
+      case "|":
+        if (this.peek() === "|") {
+          this.readChar();
+          return createToken(TokenType.Or, "||");
+        }
+        break;
 
       default:
         return;
@@ -94,5 +168,13 @@ export class Tokenizer {
     }
 
     return this.input.slice(position, this.position);
+  }
+
+  private peek(): string {
+    if (this.readPosition >= this.input.length) {
+      return "\0";
+    } else {
+      return this.input[this.readPosition];
+    }
   }
 }
