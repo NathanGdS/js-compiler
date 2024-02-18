@@ -14,6 +14,7 @@ export const TokenType = {
   OpenBracket: "[",
   CloseBracket: "]",
   Comma: ",",
+  DoubleQuotes: "DQ",
   Semicolon: ";",
   Colon: ":",
   Dash: "-",
@@ -28,14 +29,15 @@ export const TokenType = {
   GreaterThanEqual: ">=",
   If: "IF",
   Else: "ELSE",
-  //TYPES
+  RETURN: "RETURN",
   True: "TRUE",
   False: "FALSE",
+  //TYPES
   INT: "INT",
   NUMBER: "NUMBER",
   BOOLEAN: "BOOLEAN",
   STRING: "STRING",
-  RETURN: "RETURN",
+  Array: "ARRAY",
   // LOGICAL OPERATORS
   And: "&&",
   Or: "||",

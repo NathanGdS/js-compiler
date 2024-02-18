@@ -22,6 +22,75 @@ describe("Lexer", () => {
     }
   });
 
+  it("Types", () => {
+    const input = `
+    let paper:int = 100;
+    
+    const scissor: number = 100;
+
+    let personName: string = "John";
+
+    const isPersonAHuman: boolean = true;
+
+    let arrayOfPeople: Array = [];
+
+    `;
+
+    const tokens = [
+      { type: TokenType.Let, literal: "let" },
+      { type: TokenType.Ident, literal: "paper" },
+      { type: TokenType.Colon, literal: ":" },
+      { type: TokenType.INT, literal: "int" },
+      { type: TokenType.Assign, literal: "=" },
+      { type: TokenType.Number, literal: "100" },
+      { type: TokenType.Semicolon, literal: ";" },
+
+      { type: TokenType.Const, literal: "const" },
+      { type: TokenType.Ident, literal: "scissor" },
+      { type: TokenType.Colon, literal: ":" },
+      { type: TokenType.NUMBER, literal: "number" },
+      { type: TokenType.Assign, literal: "=" },
+      { type: TokenType.Number, literal: "100" },
+      { type: TokenType.Semicolon, literal: ";" },
+
+      { type: TokenType.Let, literal: "let" },
+      { type: TokenType.Ident, literal: "personName" },
+      { type: TokenType.Colon, literal: ":" },
+      { type: TokenType.STRING, literal: "string" },
+      { type: TokenType.Assign, literal: "=" },
+      { type: TokenType.DoubleQuotes, literal: '"' },
+      { type: TokenType.Ident, literal: "John" },
+      { type: TokenType.DoubleQuotes, literal: '"' },
+      { type: TokenType.Semicolon, literal: ";" },
+
+      { type: TokenType.Const, literal: "const" },
+      { type: TokenType.Ident, literal: "isPersonAHuman" },
+      { type: TokenType.Colon, literal: ":" },
+      { type: TokenType.BOOLEAN, literal: "boolean" },
+      { type: TokenType.Assign, literal: "=" },
+      { type: TokenType.True, literal: "true" },
+      { type: TokenType.Semicolon, literal: ";" },
+
+      { type: TokenType.Let, literal: "let" },
+      { type: TokenType.Ident, literal: "arrayOfPeople" },
+      { type: TokenType.Colon, literal: ":" },
+      { type: TokenType.Array, literal: "Array" },
+      { type: TokenType.Assign, literal: "=" },
+      { type: TokenType.OpenBracket, literal: "[" },
+      { type: TokenType.CloseBracket, literal: "]" },
+      { type: TokenType.Semicolon, literal: ";" },
+
+      { type: TokenType.Eof, literal: "eof" },
+    ];
+
+    const lexer = new Tokenizer(input);
+
+    for (const token of tokens) {
+      const next = lexer.nextToken();
+      expect(next).toStrictEqual(token);
+    }
+  });
+
   it("all tokens ", () => {
     const input = `
       let result = 0;

@@ -15,4 +15,5 @@ export const InternalWords = {
   boolean: createToken(TokenType.BOOLEAN, "boolean"),
   string: createToken(TokenType.STRING, "string"),
   return: createToken(TokenType.RETURN, "return"),
+  Array: createToken(TokenType.Array, "Array"),
 } as const;

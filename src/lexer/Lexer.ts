@@ -22,6 +22,13 @@ export class Tokenizer {
 
       const internalWords = InternalWords[ident as keyof typeof InternalWords];
 
+      if (token && token.type === TokenType.Colon) {
+        const hasType = this.verifyType(ident);
+        if (hasType) {
+          return hasType;
+        }
+      }
+
       if (internalWords) {
         return internalWords;
       } else {
@@ -43,6 +50,9 @@ export class Tokenizer {
     switch (this.ch) {
       case "\0":
         return createToken(TokenType.Eof, "eof");
+
+      case '"':
+        return createToken(TokenType.DoubleQuotes, '"');
 
       case "=":
         if (this.peek() === "=") {
@@ -123,6 +133,28 @@ export class Tokenizer {
 
       default:
         return;
+    }
+  }
+
+  private verifyType(ident: string): Token | undefined {
+    if (ident === "int") {
+      return createToken(TokenType.INT, ident);
+    }
+
+    if (ident === "number") {
+      return createToken(TokenType.NUMBER, ident);
+    }
+
+    if (ident === "boolean") {
+      return createToken(TokenType.BOOLEAN, ident);
+    }
+
+    if (ident === "string") {
+      return createToken(TokenType.STRING, ident);
+    }
+
+    if (ident === "array") {
+      return createToken(TokenType.Array, ident);
     }
   }
 
