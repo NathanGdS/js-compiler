@@ -7,6 +7,7 @@ export class Tokenizer {
   private readPosition: number = 0;
   private position: number = 0;
   private ch!: string;
+  public tokens: Token[] = [];
 
   constructor(private input: string) {
     this.readChar();
@@ -25,25 +26,30 @@ export class Tokenizer {
       if (token && token.type === TokenType.Colon) {
         const hasType = this.verifyType(ident);
         if (hasType) {
-          return hasType;
+          return this.addToken(hasType);
         }
       }
 
       if (internalWords) {
         return internalWords;
       } else {
-        return createToken(TokenType.Ident, ident);
+        return this.addToken(createToken(TokenType.Ident, ident));
       }
     } else if (isNumber(this.ch)) {
-      return createToken(TokenType.Number, this.readInt());
+      return this.addToken(createToken(TokenType.Number, this.readInt()));
     } else if (!token) {
       const illegalChar = this.ch;
       this.readChar();
-      return createToken(TokenType.Illegal, illegalChar);
+      return this.addToken(createToken(TokenType.Illegal, illegalChar));
     }
 
     this.readChar();
     return token as Token;
+  }
+
+  private addToken(token: Token): Token {
+    this.tokens.push(token);
+    return token;
   }
 
   private readOperators(): Token | undefined {
