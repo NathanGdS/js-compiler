@@ -64,12 +64,7 @@ export class Parser {
   }
 
   private parseExpression(): Expression {
-    const expression: Expression = {
-      value: undefined,
-      type: undefined,
-      expression: undefined,
-    };
-    let actualExpression: Expression = {
+    let expression: Expression = {
       value: undefined,
       type: undefined,
       expression: undefined,
@@ -96,17 +91,49 @@ export class Parser {
         continue;
       }
 
-      if (!expression.value) {
-        expression.value = this.actualToken.literal;
-        expression.type = this.actualToken.type;
+      const old = expression;
+      if (timesRead === 0) {
+        expression = {
+          value: this.actualToken.literal,
+          type: this.actualToken.type,
+        };
       } else {
-        actualExpression.value = this.actualToken.literal;
-        actualExpression.type = this.actualToken.type;
+        expression = this.buildExpression(expression, old);
       }
-      expression.expression = actualExpression;
+
       timesRead++;
       this.readToken();
     }
+    return expression;
+  }
+
+  private buildExpression(
+    expression: Expression,
+    old: Expression
+  ): ParserExpression {
+    const newExpression = {
+      value: this.actualToken.literal,
+      type: this.actualToken.type,
+    };
+
+    if (old?.expression) {
+      expression = {
+        value: old?.value,
+        type: old?.type,
+        expression: {
+          value: old?.expression?.value,
+          type: old?.expression?.type,
+          expression: newExpression,
+        },
+      };
+    } else {
+      expression = {
+        value: old?.value,
+        type: old?.type,
+        expression: newExpression,
+      };
+    }
+
     return expression;
   }
 

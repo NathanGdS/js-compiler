@@ -2,7 +2,7 @@ import { TokenType } from "../lexer/constants";
 import { Parser } from "./Parser";
 
 describe("Parser", () => {
-  it("should be defined", () => {
+  it("variable assertion", () => {
     const tokens = [
       { type: TokenType.Let, literal: "let" },
       { type: TokenType.Ident, literal: "paper" },
@@ -12,7 +12,6 @@ describe("Parser", () => {
     ];
 
     const parser = new Parser(tokens).parse();
-    console.log(JSON.stringify(parser, null, 2));
     expect(parser).toEqual([
       {
         type: "LET",
@@ -21,8 +20,12 @@ describe("Parser", () => {
           value: "paper",
           type: "IDENT",
           expression: {
-            value: "100",
-            type: "NUMBER",
+            value: "=",
+            type: "=",
+            expression: {
+              value: "100",
+              type: "NUMBER",
+            },
           },
         },
       },
