@@ -55,7 +55,7 @@ export class Parser {
 
   private parseVariableDeclaration(): void {
     const token = this.readToken();
-    const expression = this.parseExpression();
+    const expression = this.parseVariableExpression();
     this.ast.push({
       type: token.type,
       value: token.literal,
@@ -63,48 +63,42 @@ export class Parser {
     });
   }
 
-  private parseExpression(): Expression {
-    let expression: Expression = {
+  private parseVariableExpression(
+    expression: Expression = {
       value: undefined,
       type: undefined,
       expression: undefined,
-    };
+    },
+    timesRead: number = 0
+  ): Expression {
     this.readToken();
-
-    let stillReading = true;
-    let timesRead = 0;
-    while (stillReading) {
-      if (timesRead === 0 && this.actualToken.type !== TokenType.Ident) {
-        throw new Error(
-          `Invalid syntax, expecting identifier, found ${this.actualToken.type}`
-        );
-      }
-
-      if (timesRead === 1 && this.actualToken.type !== TokenType.Assign) {
-        throw new Error(
-          `Invalid syntax, expecting assertion, found ${this.actualToken.type}`
-        );
-      }
-
-      if (this.actualToken.type == TokenType.Semicolon) {
-        stillReading = false;
-        continue;
-      }
-
-      const old = expression;
-      if (timesRead === 0) {
-        expression = {
-          value: this.actualToken.literal,
-          type: this.actualToken.type,
-        };
-      } else {
-        expression = this.buildExpression(expression, old);
-      }
-
-      timesRead++;
-      this.readToken();
+    if (timesRead === 0 && this.actualToken.type !== TokenType.Ident) {
+      throw new Error(
+        `Invalid syntax, expecting identifier, found ${this.actualToken.type}`
+      );
     }
-    return expression;
+
+    if (timesRead === 1 && this.actualToken.type !== TokenType.Assign) {
+      throw new Error(
+        `Invalid syntax, expecting assertion, found ${this.actualToken.type}`
+      );
+    }
+
+    if (this.actualToken.type == TokenType.Semicolon) {
+      return expression;
+    }
+
+    const old = expression;
+    if (timesRead === 0) {
+      expression = {
+        value: this.actualToken.literal,
+        type: this.actualToken.type,
+      };
+    } else {
+      expression = this.buildExpression(expression, old);
+    }
+
+    return this.parseVariableExpression(expression, timesRead + 1);
   }
 
   private buildExpression(
