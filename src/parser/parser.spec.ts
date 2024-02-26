@@ -52,4 +52,32 @@ describe("Parser", () => {
       },
     ]);
   });
+
+  it("should throw if second argument is not an identity", () => {
+    const tokens = [
+      { type: TokenType.Let, literal: "let" },
+      { type: TokenType.Number, literal: "100" },
+      { type: TokenType.Assign, literal: "=" },
+      { type: TokenType.Number, literal: "100" },
+      { type: TokenType.Semicolon, literal: ";" },
+    ];
+
+    expect(() => new Parser(tokens).parse()).toThrow(
+      `Invalid syntax, expecting identifier, found ${TokenType.Number}`
+    );
+  });
+
+  it("should throw if third argument is not an assertion symbol", () => {
+    const tokens = [
+      { type: TokenType.Let, literal: "let" },
+      { type: TokenType.Ident, literal: "paper" },
+      { type: TokenType.Ident, literal: "paper" },
+      { type: TokenType.Number, literal: "100" },
+      { type: TokenType.Semicolon, literal: ";" },
+    ];
+
+    expect(() => new Parser(tokens).parse()).toThrow(
+      `Invalid syntax, expecting assertion, found ${TokenType.Ident}`
+    );
+  });
 });
